@@ -1,3 +1,4 @@
 # Zabbix Projects
 
-![example workflow](https://github.com/github/docs/actions/runs/4277918364)
+![example branch parameter](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?branch=feature-1)
+
