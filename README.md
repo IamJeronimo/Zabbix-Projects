@@ -1,4 +1,6 @@
 # Zabbix Projects
 
 
-[Buttom-maintenance](https://img.shields.io/badge/build-maintenance-yellow)
+![Buttommaintenance](https://img.shields.io/badge/build-maintenance-yellow)
+
+![WordPress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/aaa)
