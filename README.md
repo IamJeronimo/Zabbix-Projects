@@ -1,3 +1,4 @@
 # Zabbix Projects
 
-![AppVeyor](https://img.shields.io/appveyor/build/IamJeronimo/Zabbix-Projects)
+
+[Buttom-maintenance](https://img.shields.io/badge/build-maintenance-yellow)
