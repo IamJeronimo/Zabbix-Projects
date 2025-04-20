@@ -7,7 +7,7 @@ Manutenção: Lucas Jeronimo da Silva - 2025-04-20
 - Temos um script que faz testes speed e em seguida encaminha ao Zabbix Server.
 #################################### HISTORICO ##########################################################   
 	Major Release v0.1, Lucas Jeronimo:
-		2023-03-14 v0.1 - Versão inicial, já conseguimos monitorar o link com clareza.
+		2025-04-20 v0.1 - Versão inicial, já conseguimos monitorar o link com clareza.
 coment
 
 # Definindo as vars
