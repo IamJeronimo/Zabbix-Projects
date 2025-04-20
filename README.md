@@ -1,6 +1,6 @@
 # Zabbix SpeedTest - Monitoring
 
-1. Instalar: jq e zabbix-sender 
+1. Instalar: speedtest-cli, jq e zabbix-sender 
 2. O script "speedtest.sh" deve ser implantado em algum Zabbix Server/Proxy da rede alvo, sua saída padrão deve ser o link alvo;
 3. Criaremos um crontab ( */3 * * * *     /etc/zabbix/scripts/speedtest.sh ) onde sua execução será a cada 3 minutos;
 4. Incluír o template vinculado a este projeto, poderá ser modificado da maneira que entender melhor atender sua necessídade.
