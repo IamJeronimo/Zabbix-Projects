@@ -1,0 +1,214 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: 7df96b18c230490a9a0a9e2307226338
+      name: Templates
+  templates:
+    - uuid: 4281d5d7fe3a4f2f9c28b241a08da82f
+      template: LJS_Check_Speedtest
+      name: LJS_Check_Speedtest
+      templates:
+        - name: LJS_Check_DNS
+      groups:
+        - name: Templates
+      items:
+        - uuid: 05035a524a134c5898df7ef5e0304a80
+          name: '2 - Download Speedtest'
+          type: DEPENDENT
+          key: download_speedtest
+          delay: '0'
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.download
+          master_item:
+            key: speedtest
+        - uuid: e9d5e0dbccf04d339432e06b186dcc04
+          name: '2.1 - Download Speedtest (Int)'
+          type: CALCULATED
+          key: download_speedtest_int
+          delay: 3m
+          units: Mbps
+          params: last(//download_speedtest)/1000000
+          triggers:
+            - uuid: d59e9a99d44d435aba6cf92a9cd5e59c
+              expression: 'max(/LJS_Check_Speedtest/download_speedtest_int,30m)<=200 and {$HOST.PROD}=1'
+              name: '[000.000-{$TORRE}] - Speedtest Download menor do que 40% do contratado'
+              priority: DISASTER
+            - uuid: 781d5b867dff4819996ed7fd66445410
+              expression: 'max(/LJS_Check_Speedtest/download_speedtest_int,30m)<=300'
+              name: '[000.000-{$TORRE}] - Speedtest Download menor do que 60% do contratado'
+              priority: HIGH
+              dependencies:
+                - name: '[000.000-{$TORRE}] - Speedtest Download menor do que 40% do contratado'
+                  expression: 'max(/LJS_Check_Speedtest/download_speedtest_int,30m)<=200 and {$HOST.PROD}=1'
+            - uuid: 803cb353f89f4cbaa63acbc94b4db0cc
+              expression: 'max(/LJS_Check_Speedtest/download_speedtest_int,30m)<=400'
+              name: '[000.000-{$TORRE}] - Speedtest Download menor do que 80% do contratado'
+              priority: AVERAGE
+              dependencies:
+                - name: '[000.000-{$TORRE}] - Speedtest Download menor do que 60% do contratado'
+                  expression: 'max(/LJS_Check_Speedtest/download_speedtest_int,30m)<=300'
+        - uuid: 17ff1966d8984f1abf42a96ef44fab24
+          name: '7 - ISP Host (Provedor Remoto - Server) Speedtest'
+          type: DEPENDENT
+          key: isp_host_server_speedtest
+          delay: '0'
+          history: 3d
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.server.host
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 12h
+          master_item:
+            key: speedtest
+        - uuid: c5742429fb8043d4b977c734c419b9e5
+          name: '8 - ISP Nome (Provedor Remoto - Server) Speedtest'
+          type: DEPENDENT
+          key: isp_name_server_speedtest
+          delay: '0'
+          history: 3d
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.server.sponsor
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 12h
+          master_item:
+            key: speedtest
+        - uuid: 9d8cb566f2b049de848ec835b243f340
+          name: '5 - ISP Nome  (Provedor Local) Speedtest'
+          type: DEPENDENT
+          key: isp_speedtest
+          delay: '0'
+          history: 3d
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.client.isp
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 12h
+          master_item:
+            key: speedtest
+        - uuid: 7644c1f04aec485eb571b1c35d3a427a
+          name: '3 - Latência Speedtest'
+          type: DEPENDENT
+          key: latencia_speedtest
+          delay: '0'
+          value_type: FLOAT
+          units: ms
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.ping
+          master_item:
+            key: speedtest
+        - uuid: 9cb11770152d45d9bd007bb3c0a54709
+          name: '9 - Localidade ISP (Provedor Remoto - Server) Speedtest'
+          type: DEPENDENT
+          key: loc_isp_server_speedtest
+          delay: '0'
+          history: 3d
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.server.name
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 12h
+          master_item:
+            key: speedtest
+        - uuid: 882b912fb81248108d54349562ca5cdc
+          name: '6 - Localidade ISP (Provedor Local) Speedtest'
+          type: DEPENDENT
+          key: loc_isp_speedtest
+          delay: '0'
+          history: 3d
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.client.country
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 12h
+          master_item:
+            key: speedtest
+        - uuid: 358f1112337e41feaade7d4840a9bc15
+          name: '4 - IP Pub. ISP (Provedor Local) Speedtest'
+          type: DEPENDENT
+          key: pub_ip_isp_speedtest
+          delay: '0'
+          history: 3d
+          value_type: CHAR
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.client.ip
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 12h
+          master_item:
+            key: speedtest
+        - uuid: 3ffd3b6bb0f4436391bdc1cc0ec663d4
+          name: '0 - SpeedTest RAW'
+          type: TRAP
+          key: speedtest
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+        - uuid: 4e9b3357afb04357a502ccc19c6a5ac3
+          name: '1 - Upload Speedtest'
+          type: DEPENDENT
+          key: upload_speedtest
+          delay: '0'
+          value_type: FLOAT
+          units: bps
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.upload
+          master_item:
+            key: speedtest
+        - uuid: 8f043b87995842a49ebedc52cdf06c25
+          name: '1.1 - Upload Speedtest (Int)'
+          type: CALCULATED
+          key: upload_speedtest_int
+          delay: 3m
+          units: Mbps
+          params: last(//upload_speedtest)/1000000
+          triggers:
+            - uuid: 70e1427331f04f859316d497aae810e8
+              expression: 'max(/LJS_Check_Speedtest/upload_speedtest_int,30m)<=200 and {$HOST.PROD}=1'
+              name: '[000.000-{$TORRE}] - Speedtest Upload menor do que 40% do contratado'
+              priority: DISASTER
+            - uuid: dcc93244ad884ac993c0f83a69e3715c
+              expression: 'max(/LJS_Check_Speedtest/upload_speedtest_int,30m)<=300'
+              name: '[000.000-{$TORRE}] - Speedtest Upload menor do que 60% do contratado'
+              priority: HIGH
+              dependencies:
+                - name: '[000.000-{$TORRE}] - Speedtest Upload menor do que 40% do contratado'
+                  expression: 'max(/LJS_Check_Speedtest/upload_speedtest_int,30m)<=200 and {$HOST.PROD}=1'
+            - uuid: 3ff184459a264a758fd8ea1240d6b88a
+              expression: 'max(/LJS_Check_Speedtest/upload_speedtest_int,30m)<=400'
+              name: '[000.000-{$TORRE}] - Speedtest Upload menor do que 60% do contratado'
+              priority: AVERAGE
+              dependencies:
+                - name: '[000.000-{$TORRE}] - Speedtest Upload menor do que 60% do contratado'
+                  expression: 'max(/LJS_Check_Speedtest/upload_speedtest_int,30m)<=300'
