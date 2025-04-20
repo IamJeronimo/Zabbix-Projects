@@ -1,3 +1,3 @@
-# Zabbix - SpeedTest Monitoring
+# Zabbix SpeedTest - Monitoring
 
 ![in progress](https://img.shields.io/badge/build-in%20progress-yellowgreen)
